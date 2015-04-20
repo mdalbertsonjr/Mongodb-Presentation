@@ -1,0 +1,18 @@
+Todo list:
+
++ create a demonstration environment.
++ buy a new laptop.
++ flesh out the slides.
++ make sure that I still have the mongo book at the ready.
++ create a notes file for the installation demo.
++ think of more advanced queries (consult the mongo book).
++ create a notes file for writing a simple C# mongo project.
++ write or find a tool for loading shapefiles into a Mongo collection.
++ write a tool for generating 1 million points?
++ write a basic ASP.NET application for grabbing that geospatial data?
++ write a docker composure for a cluster of mongodb databases.
++ add a worker for reading random bounding boxes from the database.
++ add a worker for adding random data to the database.
++ add a worker for deleting data from the database.
++ add a mongo monitor to the cluster.
++ make the number of workers adjustable to see what happens in the monitor?

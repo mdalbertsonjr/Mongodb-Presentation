@@ -1,0 +1,7 @@
+Michael Albertson is the Linux system administrator, who somehow got a job
+writing .NET applications. Currently, he works as a software developer at
+LoopNet.  He has a masters degree from UC Riverside and a bachelors degree
+from Cal Poly Pomona.  Previously he worked as a GIS software developer at
+Eckersall LLC, where he used MongoDB as a schema-less location store.
+He helped to found Ember Riverside, and has given presentations there
+on software engineering.

@@ -17,6 +17,7 @@
         "./answer_files/2012_r2/Autounattend.xml",
         "./scripts/openssh.ps1",
         "./scripts/oracle-cert.cer",
+        "./scripts/vm-guest-tools.bat",
         "./scripts/vagrant.pub"
       ],
       "vboxmanage": [

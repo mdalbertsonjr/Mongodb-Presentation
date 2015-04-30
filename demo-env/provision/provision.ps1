@@ -9,3 +9,19 @@ choco install visualstudiocommunity2013 /AdminFile "/vagrant/provision/AdminDepl
 #}
 #
 #/users/vagrant/vs_community.exe /Passive /NoRestart /AdminFile /users/vagrant/AdminDeployment.xml  /Log $env:temp\vs.log
+
+# install git
+#echo "Installing git"
+#choco install git
+
+# clone the git repository
+#echo "Cloning this repository to the VM"
+# Remember to change this to github.com
+#git clone http://git.albertsonian.com
+
+# download mongodb
+#echo "Downloading MongoDB"
+#(New-Object System.Net.WebClient).DownloadFile('http://MongoDb...', '/users/vagrant/mongo.msi')
+
+# install mongodb?
+#msiexec.exe /i /qn /users/vagrant/mongo.msi

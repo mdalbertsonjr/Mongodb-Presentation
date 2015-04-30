@@ -1,0 +1,11 @@
+MongoDB is a NoSQL Database.  It stores data as BSON documents, a binary
+version of JSON, instead of table records.  This provides flexibility for
+data that is less structured than typical database records by allowing
+the data to be schema-less. In combination with powerful Geo-spatial indexing,
+the schema-less nature of MongoDB provides an incredibly useful means of
+storing location data.
+
+MongoDB Basics, presented by Michael Albertson, will cover how to set up
+MongoDB in a Windows environment, the basics of querying the database,
+how to interface with the database via the C# driver, and of course a
+demonstration of MongoDB's Geo-spatial indexing.

@@ -9,9 +9,6 @@
      <SelectableItemCustomization Id="SilverLight_Developer_Kit" Hidden="no" Selected="no" />
      <SelectableItemCustomization Id="Win8SDK" Hidden="no" Selected="no" />
      <SelectableItemCustomization Id="WindowsPhone80" Hidden="no" Selected="no" />
-     <SelectableItemCustomization Id="BlissHidden" Hidden="no" Selected="no" />
-     <SelectableItemCustomization Id="HelpHidden" Hidden="no" Selected="no" />
-     <SelectableItemCustomization Id="LocalDBHidden" Hidden="no" Selected="no" />
      <SelectableItemCustomization Id="PortableDTPHidden" Hidden="no" Selected="no" />
      <SelectableItemCustomization Id="PreEmptiveDotfuscatorHidden" Hidden="no" Selected="no" />
      <SelectableItemCustomization Id="PreEmptiveAnalyticsHidden" Hidden="no" Selected="no" />
@@ -30,13 +27,16 @@
      <SelectableItemCustomization Id="VCDesigntimeHidden" Hidden="no" Selected="no" />
      <SelectableItemCustomization Id="VCExtendedHidden" Hidden="no" Selected="no" />
  
+     <SelectableItemCustomization Id="Bliss" Selected="yes" />
      <SelectableItemCustomization Id="WebTools" Selected="yes" />
-     <SelectableItemCustomization Id="NetFX4Hidden" Selected="yes" />
-     <SelectableItemCustomization Id="NetFX45Hidden" Selected="yes" />
-     <SelectableItemCustomization Id="SDKTools3Hidden" Selected="yes" />
-     <SelectableItemCustomization Id="SDKTools4Hidden" Selected="yes" />
-     <SelectableItemCustomization Id="WinJSHidden" Selected="yes" />
-     <SelectableItemCustomization Id="WinSDKHidden" Selected="yes" />
+     <SelectableItemCustomization Id="NetFX4" Selected="yes" />
+     <SelectableItemCustomization Id="NetFX45" Selected="yes" />
+     <SelectableItemCustomization Id="SDKTools3" Selected="yes" />
+     <SelectableItemCustomization Id="SDKTools4" Selected="yes" />
+     <SelectableItemCustomization Id="WinJS" Selected="yes" />
+     <SelectableItemCustomization Id="WinSDK" Selected="yes" />
+     <SelectableItemCustomization Id="HelpHidden" Selected="yes" />
+     <SelectableItemCustomization Id="LocalDBHidden" Selected="yes" />
   </SelectableItemCustomizations>
  
 </AdminDeploymentCustomizations>

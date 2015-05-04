@@ -1,0 +1,37 @@
+Mongo shell demo:
+
+Create:
+> db.createCollection('hitchhikers')
+{ "ok" : 1 }
+> db.hitchhikers.find()
+> db.hitchhikers.insert({'towel':'red','answer':42})
+> db.hitchhikers.find()
+{ "_id" : ObjectId("5547c939d1d8e908abdbe6ff"), "towel" : "red", "answer" : 42 }
+
+Read:
+> db.hitchhikers.find({'towel':'red'})
+{ "_id" : ObjectId("5547c939d1d8e908abdbe6ff"), "towel" : "red", "answer" : 42 }
+> db.hitchhikers.find({'towel':'blue'})
+> db.hitchhikers.insert({'question':'why?','answer':42})
+> db.hitchhikers.find({'towel':null})
+{ "_id" : ObjectId("5547ca25d1d8e908abdbe700"), "question" : "why?", "answer" : 42 }
+> db.hitchhikers.find({'answer':42})
+{ "_id" : ObjectId("5547c939d1d8e908abdbe6ff"), "towel" : "red", "answer" : 42 }
+{ "_id" : ObjectId("5547ca25d1d8e908abdbe700"), "question" : "why?", "answer" : 42 }
+
+Update:
+> db.hitchhikers.update({'towel':'red'},{$set:{'towel':'blue'}})
+> db.hitchhikers.find({'towel':'blue'})
+{ "_id" : ObjectId("5547c939d1d8e908abdbe6ff"), "answer" : 42, "towel" : "blue" }
+> db.hitchhikers.update({'answer':42},{$set:{'answer':47}},false,true)
+> db.hitchhikers.find()
+{ "_id" : ObjectId("5547c939d1d8e908abdbe6ff"), "answer" : 47, "towel" : "blue" }
+{ "_id" : ObjectId("5547ca25d1d8e908abdbe700"), "question" : "why?", "answer" : 47 }
+
+Delete:
+> db.hitchhikers.remove({'question':'why?'})
+> db.hitchhikers.find()
+{ "_id" : ObjectId("5547c939d1d8e908abdbe6ff"), "answer" : 47, "towel" : "blue" }
+
+$and/$or:
+

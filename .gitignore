@@ -3,3 +3,11 @@
 *.iso
 *.ISO
 .vagrant
+
+*.aux
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.toc

@@ -12,3 +12,7 @@
 *.snm
 *.toc
 *.vrb
+
+bin/
+obj/
+*.suo

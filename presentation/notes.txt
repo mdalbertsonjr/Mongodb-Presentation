@@ -1,3 +1,12 @@
+Mongo Installation demo:
+1. Have the VM launched.
+2. Install the MSI.
+3. Open up PowerShell
+4. Run the following commands:
+> mkdir C:/data/db
+> cd 'C:/Program Files/Mongo/... bin/'
+> mongod --install --logpath 'C:/Program Files/Mongo/log'
+
 Mongo shell demo:
 
 Create:

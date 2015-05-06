@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDBDemo.DataGenerator", "MongoDBDemo\MongoDBDemo.DataGenerator.csproj", "{6CF2D737-BF69-44CC-85E4-2A2D96F75397}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapApplication", "MapApplication\MapApplication.csproj", "{C7936025-9D8F-4970-B2CF-A052BFBB9E2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6CF2D737-BF69-44CC-85E4-2A2D96F75397}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CF2D737-BF69-44CC-85E4-2A2D96F75397}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CF2D737-BF69-44CC-85E4-2A2D96F75397}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7936025-9D8F-4970-B2CF-A052BFBB9E2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7936025-9D8F-4970-B2CF-A052BFBB9E2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7936025-9D8F-4970-B2CF-A052BFBB9E2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7936025-9D8F-4970-B2CF-A052BFBB9E2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿<html>
 <head>
+    <link rel="stylesheet" type="text/css" href="~/Content/Site.css" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,11 +20,18 @@
                 console.log(data);
                 var features = [];
                 //parse data as list of objects
+                var parsedData = JSON.parse(data);
                 //for each object
-                //extract the lon lat
-                //project the lon lat into EPSG:4326
-                //create a feature
-                //add feature to the list
+                for (var i = 0; i < parsedData.length; i++) {
+                    var coords = parsedData[i].geo.coordinates;
+                    var lonLat = new OpenLayers.LonLat(-117.6, 34.07).transform(
+                        new OpenLayers.Projection("EPSG:4326"),
+                        map.getProjectionObject()
+                    );
+                    var geometry = new OpenLayers.Geometry.Point(lonLat.lon, lonLat.lat);
+                    var feature = new OpenLayers.Feature.Vector(geometry, parseData.attributes);
+                    features.push(feature);
+                }
 
                 localLayer.addFeatures(features);
             });

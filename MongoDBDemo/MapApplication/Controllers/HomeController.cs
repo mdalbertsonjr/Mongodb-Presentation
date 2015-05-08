@@ -42,7 +42,7 @@ namespace MapApplication.Controllers
         }
 
         //http://localhost:57212/home/near/default?point=-130.83901183425886&point=40.355523246501896&maxDistance=500&minDistance=250
-        [HttpGet]
+        [HttpGet]//[HttpPost]              string id, [FromBody]dynamic obj
         public async Task<JsonResult> Near(string id, [System.Web.Http.FromUri] double[] point, double maxDistance, double minDistance)//Make a model for this argument
         {
             IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(id);
@@ -66,10 +66,14 @@ namespace MapApplication.Controllers
         }
 
         //http://docs.mongodb.org/manual/reference/operator/query/geoWithin/#op._S_geoWithin
+        //This dynamic argument might not work...
+        //http://stackoverflow.com/questions/19616406/pass-dynamic-data-to-mvc-controller-with-ajax
+        //http://stackoverflow.com/questions/5022958/passing-dynamic-json-object-to-c-sharp-mvc-controller
+        //I really like the dynamic json wrapper in the second link...
         [HttpGet]
-        public async Task<JsonResult> Within(double[] point, string collectionName)//Make a model for this argument
+        public async Task<JsonResult> Within(string id, [System.Web.Http.FromBody]dynamic obj)//double[] point, string collectionName)//Make a model for this argument
         {
-            IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(collectionName);
+            IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(id);
             //set up the query
             //query the database
             //reformat the response
@@ -77,9 +81,9 @@ namespace MapApplication.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> Intersects(double[] point, string collectionName)//Make a model for this argument
+        public async Task<JsonResult> Intersects(string id, [System.Web.Http.FromBody]dynamic obj)//double[] point, string collectionName)//Make a model for this argument
         {
-            IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(collectionName);
+            IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(id);
             //set up the query
             //query the database
             //reformat the response

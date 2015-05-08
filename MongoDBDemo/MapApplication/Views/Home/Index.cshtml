@@ -7,12 +7,18 @@
     <script src="~/Scripts/OpenLayers-2.13.1/OpenLayers.js"></script>
     <script type="text/javascript">
         var map, layer;
-        function init(){
+        //TODO list:
+        //Add a layer switcher with three collections programmed in
+        //Add a form/control for near
+        //Add a control for within polygon
+        //Add a control for within box
+        //Add a line intersection tool
+        function init() {
             map = new OpenLayers.Map('map');
             layer = new OpenLayers.Layer.OSM("Simple OSM Map");
             map.addLayer(layer);
             map.setCenter(
-                new OpenLayers.LonLat(-71.147, 42.472).transform(
+                new OpenLayers.LonLat(-117.6, 34.07).transform(
                     new OpenLayers.Projection("EPSG:4326"),
                     map.getProjectionObject()
                 ), 12

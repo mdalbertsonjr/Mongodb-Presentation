@@ -34,6 +34,8 @@
                 }
 
                 localLayer.addFeatures(features);
+            }, function (error) {
+                alert('An error occured while retrieving data for the map.');
             });
         }
 
@@ -88,7 +90,11 @@
         function init() {
             map = new OpenLayers.Map('map');
             layer = new OpenLayers.Layer.OSM("Simple OSM Map");
-            map.addLayer(layer);
+            default_points = new OpenLayers.Layer.Vector("defualt points");
+            segments = new OpenLayers.Layer.Vector("segments");
+            vector_layer = new OpenLayers.Layer.Vector("vector_layer");
+
+            map.addLayers([layer, default_points, segments, vector_layer]);
             map.setCenter(
                 new OpenLayers.LonLat(-117.6, 34.07).transform(
                     new OpenLayers.Projection("EPSG:4326"),

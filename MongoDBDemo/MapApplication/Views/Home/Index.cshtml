@@ -6,13 +6,77 @@
     <script src="~/Scripts/OpenLayers-2.13.1/OpenLayers.js"></script>
     <script src="~/Scripts/jquery-1.11.3.min.js"></script>
     <script type="text/javascript">
-        var map, layer;
+        var map, layer, default_points, segments, vector_layer;
         //TODO list:
-        //Add a layer switcher with three collections programmed in
+        //Add a layer switcher with three collections programmed in //Could I get away with just a radial menu?
         //Add a form/control for near
         //Add a control for within polygon
         //Add a control for within box
         //Add a line intersection tool
+
+        function getLayer(layerId, localLayer) {
+            $.get("/home/layer/" + layerId, function (data) {
+                console.log(data);
+                var features = [];
+                //parse data as list of objects
+                //for each object
+                //extract the lon lat
+                //project the lon lat into EPSG:4326
+                //create a feature
+                //add feature to the list
+
+                localLayer.addFeatures(features);
+            });
+        }
+
+        function activateLayer(layerId) {
+            if (layerId === 'default_points') {
+                //ensure segments is invisible
+                //clear out the old features from the layer
+                //set the visibility of the layer as on
+                getLayer(layerId, default_points);
+            }
+
+            if (layerId === 'segment') {
+                //ensure default points is invisible
+                //clear out the old features from the layer
+                //set the visibility of the layer as on
+                getLayer(layerId, default_points);
+            }
+
+            else {//none case.
+                //ensure the other two layers are invisible
+                //dump their features?
+            }
+        }
+        //TODO: bind this function to radial buttons
+
+        function polygonComplete(feature) {
+            //query for the id selected
+            //extract geometry
+            //form the query for within polygon
+            //call /home/WithinPolygon/id (POST)
+        }
+
+        function boxComplete(feature/*box?*/) {
+            //query for the id selected
+            //extract geometry
+            //form the query for within polygon
+            //call /home/WithinBox/id (POST)
+        }
+
+        function lineComplete(feature/*box?*/) {
+            //query for the id selected
+            //extract geometry
+            //form the query for within polygon
+            //call /home/WithinBox/id (POST)
+        }
+
+        function near(point) {
+            //set up the call to near.
+            //should I set up the document here?
+        }
+
         function init() {
             map = new OpenLayers.Map('map');
             layer = new OpenLayers.Layer.OSM("Simple OSM Map");

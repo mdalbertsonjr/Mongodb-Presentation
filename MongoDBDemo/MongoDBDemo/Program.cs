@@ -12,19 +12,16 @@ namespace MongoDBDemo
     class Program
     {
         private static bool GEN_POINT_DATA = false;
-        //private static bool GEN_POLYGON_DATA = false;//disabling polygons for now...
         private static bool GEN_LINE_DATA = false;
         private static bool SHOW_HELP = false;
 
         private static string COLLECTION_NAME = "default";
         private static string DATABASE = "mongodb://localhost/geo";
         private static string CARDINALITY = "100";
-        private static string BBOX = "-131.0000939,40.3553305,-130.8044151,40.453169";
+        private static string CENTER_POINT = "-117.6,34.07";
 
-        private static double LEFT = -131.0000939;
-        private static double BOTTOM = 40.3553305;
-        private static double RIGHT = -130.8044151;
-        private static double TOP = 40.453169;
+        private static double LON = -117.6;
+        private static double LAT = 34.07;
 
         private static Random rand = new Random(DateTime.Now.Millisecond);
 
@@ -33,12 +30,11 @@ namespace MongoDBDemo
             OptionSet opts = new OptionSet()
             {
                 {"points", (x) => {GEN_POINT_DATA = x != null; }},
-                //{"polygons", (x) => {GEN_POLYGON_DATA = x != null; }},
                 {"lines", (x) => {GEN_LINE_DATA = x != null; }},
                 {"collection-name=", (x) => {COLLECTION_NAME = x ?? COLLECTION_NAME; }},
                 {"db=", (x) => {DATABASE = x ?? DATABASE; }},
                 {"cardinality=", (x) => {CARDINALITY = x ?? CARDINALITY; }},
-                {"bbox=", (x) => {BBOX = x ?? BBOX; }},
+                {"center=", (x) => {CENTER_POINT = x ?? CENTER_POINT; }},
                 {"help", (x) => {SHOW_HELP = x != null; }},
             };
 
@@ -59,7 +55,7 @@ namespace MongoDBDemo
                 return;
             }
 
-            if(!(GEN_LINE_DATA || GEN_POINT_DATA))// || GEN_POLYGON_DATA))
+            if(!(GEN_LINE_DATA || GEN_POINT_DATA))
             {
                 Console.WriteLine("Please select a data type.");
                 return;
@@ -119,10 +115,6 @@ namespace MongoDBDemo
             {
                 result = GeneratePointDocument();
             }
-            //if(GEN_POLYGON_DATA)
-            //{
-            //    result = GeneratePolygonDocument();
-            //}
             if(GEN_LINE_DATA)
             {
                 result = GenerateLineDocument();
@@ -148,36 +140,6 @@ namespace MongoDBDemo
         private static double[][] GenerateRandomLine()
         {
             return new double[][] { GenerateRandomPoint(), GenerateRandomPoint() };
-        }
-
-        private static BsonDocument GeneratePolygonDocument()
-        {
-            double[][][] polygon = GenerateRandomPolygon();
-            BsonDocument attributes = GenerateRandomAttributes();
-
-            return (new {
-                geo = new {
-                    type = "Polygon",
-                    coordinates = polygon,
-                },
-                attributes = attributes,
-            }).ToBsonDocument();
-        }
-
-        private static double[][][] GenerateRandomPolygon()
-        {
-            double flip = rand.NextDouble();
-            int vertices = flip >= 0.5 ? 4 : 3;
-
-            List<double[]> v = new List<double[]>();
-
-            for (int i = 0; i < vertices; i++)
-            {
-                v.Add(GenerateRandomPoint());
-            }
-            v.Add(v.First());
-
-            return new double[][][]{ v.ToArray() };
         }
 
         private static BsonDocument GeneratePointDocument()
@@ -207,21 +169,19 @@ namespace MongoDBDemo
 
         private static double[] GenerateRandomPoint()
         {
-            double longitude = rand.NextDouble() * Math.Abs(LEFT - RIGHT) + LEFT;
-            double latitude = rand.NextDouble() * Math.Abs(TOP - BOTTOM) + BOTTOM;
+            double longitude = ((rand.NextDouble() >= 0.5) ? -1 : 1.0) * rand.NextDouble() + LON;
+            double latitude = ((rand.NextDouble() >= 0.5) ? -1 : 1.0) * rand.NextDouble() + LAT;
 
             return new double[] { longitude, latitude };
         }
 
         private static void ParseBBox()
         {
-            string[] parts = BBOX.Split(',');
+            string[] parts = CENTER_POINT.Split(',');
 
             if (parts.Length != 4 ||
-                !double.TryParse(parts[0], out LEFT) ||
-                !double.TryParse(parts[1], out BOTTOM) ||
-                !double.TryParse(parts[2], out RIGHT) ||
-                !double.TryParse(parts[3], out TOP))
+                !double.TryParse(parts[0], out LON) ||
+                !double.TryParse(parts[1], out LAT))
                 throw new Exception();
         }
 

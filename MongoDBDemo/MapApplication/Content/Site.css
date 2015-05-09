@@ -63,3 +63,10 @@ textarea {
     height: 600px;
     width: 600px;
 }
+
+#layerSwitcher ul {
+    list-style: none;
+    margin-top: 0px;
+    margin-left: 0px;
+    padding-left: 0px;
+}

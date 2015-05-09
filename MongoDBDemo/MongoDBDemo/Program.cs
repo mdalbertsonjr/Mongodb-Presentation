@@ -112,7 +112,7 @@ namespace MongoDBDemo
                 await collection.InsertOneAsync(doc);
             }
 
-            var lastTask = await collection.Indexes.CreateOneAsync((new { geo = "2dsphere" }).ToBsonDocument());
+            var lastTask = await collection.Indexes.CreateOneAsync((new { geometry = "2dsphere" }).ToBsonDocument());
         }
 
         private static BsonDocument GenerateDocument()
@@ -137,11 +137,12 @@ namespace MongoDBDemo
             BsonDocument attributes = GenerateRandomAttributes();
 
             return (new {
-                geo = new {
+                type = "Feature",
+                geometry = new {
                     type = "LineString",
                     coordinates = line,
                 },
-                attributes = attributes,
+                properties = attributes,
             }).ToBsonDocument();
         }
 
@@ -156,11 +157,12 @@ namespace MongoDBDemo
             BsonDocument attributes = GenerateRandomAttributes();
 
             return (new {
-                geo = new { 
+                type = "Feature",
+                geometry = new { 
                     type = "Point",
                     coordinates =  point,
                 },
-                attributes = attributes,
+                properties = attributes,
             }).ToBsonDocument();
         }
 

@@ -37,6 +37,7 @@ namespace MapApplication.Controllers
             IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(id);
 
             var features = await collection.Find<BsonDocument>(new BsonDocument()).ToListAsync();
+            features = features.Select(x => { x.Remove("_id"); return x; }).ToList();
 
             return Json(features.ToJson(),JsonRequestBehavior.AllowGet);
         }

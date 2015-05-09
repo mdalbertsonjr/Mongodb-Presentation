@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NDesk.Options;
 using MongoDB.Driver;
 using MongoDB.Bson;
+using System.Threading;
 
 namespace MongoDBDemo
 {
@@ -22,6 +23,8 @@ namespace MongoDBDemo
 
         private static double LON = -117.6;
         private static double LAT = 34.07;
+
+        private static int CARDINALITYN = 100;
 
         private static Random rand = new Random(DateTime.Now.Millisecond);
 
@@ -61,8 +64,7 @@ namespace MongoDBDemo
                 return;
             }
 
-            int cardinality = 0;
-            if(!int.TryParse(CARDINALITY, out cardinality))
+            if(!int.TryParse(CARDINALITY, out CARDINALITYN))
             {
                 Console.WriteLine("Please enter a valid integer.");
                 return;
@@ -78,6 +80,12 @@ namespace MongoDBDemo
                 return;
             }
 
+            Task writeToDatabase = WriteData();
+            writeToDatabase.Wait();
+        }
+
+        private static async Task WriteData()
+        {
             MongoClient client;
             MongoUrl url;
 
@@ -98,13 +106,13 @@ namespace MongoDBDemo
             IMongoCollection<BsonDocument> collection = db.GetCollection<BsonDocument>(COLLECTION_NAME);
 
             List<BsonDocument> documents = new List<BsonDocument>();
-            for(int i = 0; i < cardinality; i++)
+            for(int i = 0; i < CARDINALITYN; i++)
             {
                 BsonDocument doc = GenerateDocument();
-                collection.InsertOneAsync(doc);
+                await collection.InsertOneAsync(doc);
             }
 
-            collection.Indexes.CreateOneAsync((new { geo = "2dsphere" }).ToBsonDocument());
+            var lastTask = await collection.Indexes.CreateOneAsync((new { geo = "2dsphere" }).ToBsonDocument());
         }
 
         private static BsonDocument GenerateDocument()
@@ -130,7 +138,7 @@ namespace MongoDBDemo
 
             return (new {
                 geo = new {
-                    type = "Line",
+                    type = "LineString",
                     coordinates = line,
                 },
                 attributes = attributes,
@@ -179,7 +187,7 @@ namespace MongoDBDemo
         {
             string[] parts = CENTER_POINT.Split(',');
 
-            if (parts.Length != 4 ||
+            if (parts.Length != 2 ||
                 !double.TryParse(parts[0], out LON) ||
                 !double.TryParse(parts[1], out LAT))
                 throw new Exception();

@@ -16,31 +16,54 @@
         //Add a line intersection tool
 
         function getLayer(layerId, localLayer) {
-            $.get("/home/layer/" + layerId, function (data) {
-                console.log(data);
-                var features = [];
-                //parse data as list of objects
-                var parsedData = JSON.parse(data);
-                //for each object
-                for (var i = 0; i < parsedData.length; i++) {
-                    var coords = parsedData[i].geo.coordinates;
-                    var lonLat = new OpenLayers.LonLat(-117.6, 34.07).transform(
-                        new OpenLayers.Projection("EPSG:4326"),
-                        map.getProjectionObject()
-                    );
-                    var geometry = new OpenLayers.Geometry.Point(lonLat.lon, lonLat.lat);
-                    var feature = new OpenLayers.Feature.Vector(geometry, parseData.attributes);
-                    features.push(feature);
-                }
+            $.ajax({
+                url: '/home/layer/' + layerId,
+                success: function (data) {
+                    console.log(data.length);
+                    console.log(data);
+                    var features = [];
+                    //parse data as list of objects
+                    var parsedData = JSON.parse(data);
+                    //for each object
+                    for (var i = 0; i < parsedData.length; i++) {
+                        var coords = parsedData[i].geo.coordinates;
+                        var lonLat = new OpenLayers.LonLat(coords[0], coords[1]).transform(
+                            new OpenLayers.Projection("EPSG:4326"),
+                            map.getProjectionObject()
+                        );
+                        var geometry = new OpenLayers.Geometry.Point(lonLat.lon, lonLat.lat);
+                        var feature = new OpenLayers.Feature.Vector(geometry, parsedData[i].attributes);
+                        features.push(feature);
+                    }
 
-                localLayer.addFeatures(features);
-            }, function (error) {
-                alert('An error occured while retrieving data for the map.');
+                    localLayer.addFeatures(features);
+                }
             });
+            //$.get("/home/layer/" + layerId, function (data) {
+            //    console.log(data);
+            //    var features = [];
+            //    //parse data as list of objects
+            //    var parsedData = JSON.parse(data);
+            //    //for each object
+            //    for (var i = 0; i < parsedData.length; i++) {
+            //        var coords = parsedData[i].geo.coordinates;
+            //        var lonLat = new OpenLayers.LonLat(-117.6, 34.07).transform(
+            //            new OpenLayers.Projection("EPSG:4326"),
+            //            map.getProjectionObject()
+            //        );
+            //        var geometry = new OpenLayers.Geometry.Point(lonLat.lon, lonLat.lat);
+            //        var feature = new OpenLayers.Feature.Vector(geometry, parseData.attributes);
+            //        features.push(feature);
+            //    }
+
+            //    localLayer.addFeatures(features);
+            //}, function (error) {
+            //    alert('An error occured while retrieving data for the map.');
+            //});
         }
 
         function activateLayer(layerId) {
-            if (layerId === 'default_points') {
+            if (layerId === 'default') {
                 //ensure segments is invisible
                 //clear out the old features from the layer
                 //set the visibility of the layer as on

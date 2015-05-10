@@ -84,7 +84,6 @@ namespace MapApplication.Controllers
 
             var query = new BsonDocument("geometry", withinQuery);
 
-            var temp = query.ToJson();
             var features = await collection.Find(query.ToBsonDocument()).ToListAsync();
             features = features.Select(x => { x.Remove("_id"); return x; }).ToList();
 

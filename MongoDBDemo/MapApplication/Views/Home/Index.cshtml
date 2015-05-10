@@ -57,17 +57,14 @@
             }
         }
 
-        function boxComplete(evt) {
-            var layerId = 'default';
-            var leftCorner = [-117.7, 34.06];
-            var rightCorner = [-117.5, 34.08];
-
+        function withinBox(layerId, leftCorner, rightCorner) {
             $.ajax({
                 url: '/home/WithinBox/' + layerId + '?leftCorner=' + leftCorner[0] + '&leftCorner=' + leftCorner[1] + '&rightCorner=' + rightCorner[0] + '&rightCorner=' + rightCorner[1],
                 success: function (data) {
-                    console.log(data);
                     var parsedData = JSON.parse(data);
                     var features = extractFeatures(parsedData);
+
+                    vector_layer.addFeatures(features);
                 }
             });
         }
@@ -80,7 +77,6 @@
             $.ajax({
                 url: '/home/Near/' + layerId + '?point=' + point[0] + '&point=' + point[1] + '&maxDistance=' + maxDistance + '&minDistance=' + minDistance,
                 success: function (data) {
-                    //console.log(data);
                     var parsedData = JSON.parse(data);
                     var features = extractFeatures(parsedData);
 
@@ -115,8 +111,41 @@
             trigger: function (e) {
                 vector_layer.removeAllFeatures();
                 var lonLat = map.getLonLatFromPixel(e.xy);
-                var point = proj4(map.projection.projCode, proj4.WGS84, [lonLat.lon, lonLat.lat])
+                var point = proj4(map.projection.projCode, proj4.WGS84, [lonLat.lon, lonLat.lat]);
                 near(point);
+            }
+        });
+
+        OpenLayers.Control.WithinBox = OpenLayers.Class(OpenLayers.Control, {
+            defaultHandlerOptions: {
+                'pixelTolerance': 0,
+            },
+
+            initialize: function (options) {
+                this.handlerOptions = OpenLayers.Util.extend(
+                       {}, this.defaultHandlerOptions
+                   );
+                OpenLayers.Control.prototype.initialize.apply(
+                    this, arguments
+                );
+                this.handler = new OpenLayers.Handler.Box(
+                    this, {
+                        'done': this.trigger
+                    }, this.handlerOptions
+                );
+            },
+
+            trigger: function (e) {
+                vector_layer.removeAllFeatures();
+
+                var bottomLeft = map.getLonLatFromPixel({ x: e.left, y: e.bottom });
+                var topRight = map.getLonLatFromPixel({ x: e.right, y: e.top });
+                var leftCorner = proj4(map.projection.projCode, proj4.WGS84, [bottomLeft.lon, bottomLeft.lat]);
+                var rightCorner = proj4(map.projection.projCode, proj4.WGS84, [topRight.lon, topRight.lat]);
+
+                var layerId = $('#withinBoxLayerSelection').val();
+
+                withinBox(layerId, leftCorner, rightCorner);
             }
         });
 
@@ -145,9 +174,9 @@
             );
 
             nearControl = new OpenLayers.Control.NearControl();
-            //withinBoxControl = new OpenLayers.Control.WithinBox();
+            withinBoxControl = new OpenLayers.Control.WithinBox();
 
-            map.addControls([nearControl]);
+            map.addControls([nearControl, withinBoxControl]);
         }
 
         $(document).ready(function () {
@@ -166,6 +195,18 @@
                     $('#nearActivation').val('Deactivate');
                 }
             });
+
+            $('#withinBoxActivation').click(function () {
+                if (withinBoxControl.active) {
+                    vector_layer.removeAllFeatures();
+                    withinBoxControl.deactivate();
+                    $('#withinBoxActivation').val('Activate');
+                }
+                else {
+                    withinBoxControl.activate();
+                    $('#withinBoxActivation').val('Deactivate');
+                }
+            })
         });
     </script>
 </head>
@@ -173,13 +214,10 @@
     <div id="map" class="smallmap"></div>
 
     <form id="layerSwitcher" action="">
-        <div>Layer switcher:
-        <ul>
-            <li><label><input class="layerSwitcherItem" id="none" name="layer" type="radio" checked="checked" />No data</label></li>
-            <li><label><input class="layerSwitcherItem" id="default" name="layer" type="radio" />Points</label></li>
-            <li><label><input class="layerSwitcherItem" id="segments" name="layer" type="radio" />Lines</label></li>
-        </ul>
-        </div>
+        Layer switcher:<br />
+        <label><input class="layerSwitcherItem" id="none" name="layer" type="radio" checked="checked" />No data</label><br />
+        <label><input class="layerSwitcherItem" id="default" name="layer" type="radio" />Points</label><br />
+        <label><input class="layerSwitcherItem" id="segments" name="layer" type="radio" />Lines</label><br />
     </form>
 
     <form id="nearControl" action="">
@@ -202,6 +240,21 @@
             <label>
                 Maximum distance:
                 <input id="maxDistance" type="text" value="20000" />
+            </label><br />
+        </div>
+    </form>
+    <form id="boxControl" action="">
+        <div>
+            <label>
+                Box control:
+                <input id="withinBoxActivation" type="button" value="Activate" />
+            </label><br />
+            <label>
+                Layer:
+                <select id="withinBoxLayerSelection">
+                    <option value="default">Points</option>
+                    <option value="segments">Lines</option>
+                </select>
             </label><br />
         </div>
     </form>

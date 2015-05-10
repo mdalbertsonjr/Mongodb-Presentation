@@ -2349,6 +2349,7 @@
     <Content Include="Scripts\OpenLayers.light.js" />
     <Content Include="Scripts\OpenLayers.mobile.debug.js" />
     <Content Include="Scripts\OpenLayers.mobile.js" />
+    <Content Include="Scripts\proj4.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

@@ -11,9 +11,6 @@ namespace MapApplication.Controllers
 {
     public class HomeController : AsyncController
     {
-        //
-        // GET: /Home/
-
         private MongoUrl _url;
         private IMongoClient _client;
         private IMongoDatabase _db;

@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <script src="~/Scripts/OpenLayers-2.13.1/OpenLayers.js"></script>
     <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+    <script src="~/Scripts/proj4.js"></script>
     <script type="text/javascript">
         var map, layer, default_points, segments, vector_layer;
         var geoJSONParser = new OpenLayers.Format.GeoJSON();
@@ -14,6 +15,10 @@
         //Add a control for within polygon
         //Add a control for within box
         //Add a line intersection tool
+        //Don't use this:
+        //function y2lat(a) { return 180 / Math.PI * (2 * Math.atan(Math.exp(a * Math.PI / 180)) - Math.PI / 2); }
+        //Do this:
+        //proj4(map.projection.projCode, proj4.WGS84, [map.center.lon, map.center.lat])
 
         function getLayer(layerId, localLayer) {
             $.ajax({
@@ -47,36 +52,40 @@
                 getLayer(layerId, segments);
             }
         }
-        //TODO: bind this function to radial buttons
 
-        function polygonComplete(feature) {
-            //query for the id selected
-            //extract geometry
-            //form the query for within polygon
-            //call /home/WithinPolygon/id (POST)
-        }
+        function boxComplete(evt) {
+            var layerId = 'default';
+            var leftCorner = [-117.7, 34.06];
+            var rightCorner = [-117.5, 34.08];
 
-        function boxComplete(feature/*box?*/) {
-            //query for the id selected
-            //extract geometry
-            //form the query for within polygon
-            //call /home/WithinBox/id (POST)
-        }
-
-        function lineComplete(feature/*box?*/) {
-            //query for the id selected
-            //extract geometry
-            //form the query for within polygon
-            //call /home/WithinBox/id (POST)
+            $.ajax({
+                url: '/home/WithinBox/' + layerId + '?leftCorner=' + leftCorner[0] + '&leftCorner=' + leftCorner[1] + '&rightCorner=' + rightCorner[0] + '&rightCorner=' + rightCorner[1],
+                success: function (data) {
+                    console.log(data);
+                    var features = [];
+                    var parsedData = JSON.parse(data);
+                }
+            });
         }
 
         function near(point) {
+            var layerId = 'default';
+            var maxDistance = 20000;
+            var minDistance = 10000;
             //set up the call to near.
             //should I set up the document here?
+            $.ajax({
+                url: '/home/Near/' + layerId + '?point=' + point[0] + '&point=' + point[1] + '&maxDistance=' + maxDistance + '&minDistance=' + minDistance,
+                success: function (data) {
+                    console.log(data);
+                    var features = [];
+                    var parsedData = JSON.parse(data);
+                }
+            });
         }
 
         function init() {
-            map = new OpenLayers.Map('map');
+            map = new OpenLayers.Map('map', { projection: new OpenLayers.Projection("EPSG:3857") });
             layer = new OpenLayers.Layer.OSM("Simple OSM Map");
             default_points = new OpenLayers.Layer.Vector("defualt points");
             segments = new OpenLayers.Layer.Vector("segments");

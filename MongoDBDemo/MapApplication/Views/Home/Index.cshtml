@@ -10,30 +10,34 @@
     <script type="text/javascript">
         var map, layer, default_points, segments, vector_layer;
         var geoJSONParser = new OpenLayers.Format.GeoJSON();
+
+        var nearControl, withinBoxControl;
         //TODO list:
-        //Add a form/control for near
-        //Add a control for within polygon
         //Add a control for within box
-        //Add a line intersection tool
         //Don't use this:
         //function y2lat(a) { return 180 / Math.PI * (2 * Math.atan(Math.exp(a * Math.PI / 180)) - Math.PI / 2); }
         //Do this:
         //proj4(map.projection.projCode, proj4.WGS84, [map.center.lon, map.center.lat])
 
+        function extractFeatures(parsedData) {
+            var features = [];
+
+            for (var i = 0; i < parsedData.length; i++) {
+                var candidateFeatures = geoJSONParser.read(parsedData[i]);
+                var feature = candidateFeatures[0];
+                feature.geometry = feature.geometry.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+                features.push(feature);
+            }
+
+            return features;
+        }
+
         function getLayer(layerId, localLayer) {
             $.ajax({
                 url: '/home/layer/' + layerId,
                 success: function (data) {
-                    console.log(data.length);
-                    var features = [];
                     var parsedData = JSON.parse(data);
-
-                    for (var i = 0; i < parsedData.length; i++) {
-                        var candidateFeatures = geoJSONParser.read(parsedData[i]);
-                        var feature = candidateFeatures[0];
-                        feature.geometry = feature.geometry.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
-                        features.push(feature);
-                    }
+                    var features = extractFeatures(parsedData);
 
                     localLayer.addFeatures(features);
                     map.zoomToExtent(localLayer.getExtent());
@@ -62,34 +66,75 @@
                 url: '/home/WithinBox/' + layerId + '?leftCorner=' + leftCorner[0] + '&leftCorner=' + leftCorner[1] + '&rightCorner=' + rightCorner[0] + '&rightCorner=' + rightCorner[1],
                 success: function (data) {
                     console.log(data);
-                    var features = [];
                     var parsedData = JSON.parse(data);
+                    var features = extractFeatures(parsedData);
                 }
             });
         }
 
         function near(point) {
-            var layerId = 'default';
-            var maxDistance = 20000;
-            var minDistance = 10000;
-            //set up the call to near.
-            //should I set up the document here?
+            var layerId = $('#nearLayerSelection').val();
+            var maxDistance = $('#maxDistance').val();
+            var minDistance = $('#minDistance').val();
+
             $.ajax({
                 url: '/home/Near/' + layerId + '?point=' + point[0] + '&point=' + point[1] + '&maxDistance=' + maxDistance + '&minDistance=' + minDistance,
                 success: function (data) {
-                    console.log(data);
-                    var features = [];
+                    //console.log(data);
                     var parsedData = JSON.parse(data);
+                    var features = extractFeatures(parsedData);
+
+                    vector_layer.addFeatures(features);
                 }
             });
         }
 
+        OpenLayers.Control.NearControl = OpenLayers.Class(OpenLayers.Control, {
+            defaultHandlerOptions: {
+                'single': true,
+                'double': false,
+                'pixelTolerance': 0,
+                'stopSingle': false,
+                'stopDouble': false,
+            },
+
+            initialize: function (options) {
+                this.handlerOptions = OpenLayers.Util.extend(
+                       {}, this.defaultHandlerOptions
+                   );
+                OpenLayers.Control.prototype.initialize.apply(
+                    this, arguments
+                );
+                this.handler = new OpenLayers.Handler.Click(
+                    this, {
+                        'click': this.trigger
+                    }, this.handlerOptions
+                );
+            },
+
+            trigger: function (e) {
+                vector_layer.removeAllFeatures();
+                var lonLat = map.getLonLatFromPixel(e.xy);
+                var point = proj4(map.projection.projCode, proj4.WGS84, [lonLat.lon, lonLat.lat])
+                near(point);
+            }
+        });
+
         function init() {
+            var vectorStyle = new OpenLayers.Style({
+                fillColor: 'red',
+                strokeColor: 'red',
+                fillOpacity: 0.6,
+                strokeOpacity: 1,
+                pointRadius: 8,
+            });
+
             map = new OpenLayers.Map('map', { projection: new OpenLayers.Projection("EPSG:3857") });
             layer = new OpenLayers.Layer.OSM("Simple OSM Map");
             default_points = new OpenLayers.Layer.Vector("defualt points");
             segments = new OpenLayers.Layer.Vector("segments");
             vector_layer = new OpenLayers.Layer.Vector("vector_layer");
+            vector_layer.styleMap = new OpenLayers.StyleMap({ 'default': vectorStyle });
 
             map.addLayers([layer, default_points, segments, vector_layer]);
             map.setCenter(
@@ -98,11 +143,28 @@
                     map.getProjectionObject()
                 ), 12
             );
+
+            nearControl = new OpenLayers.Control.NearControl();
+            //withinBoxControl = new OpenLayers.Control.WithinBox();
+
+            map.addControls([nearControl]);
         }
 
         $(document).ready(function () {
             $('input[name=layer]:radio', '#layerSwitcher').change(function () {
                 activateLayer(this.id);
+            });
+
+            $('#nearActivation').click(function () {
+                if (nearControl.active) {
+                    vector_layer.removeAllFeatures();
+                    nearControl.deactivate();
+                    $('#nearActivation').val('Activate');
+                }
+                else {
+                    nearControl.activate();
+                    $('#nearActivation').val('Deactivate');
+                }
             });
         });
     </script>
@@ -120,6 +182,29 @@
         </div>
     </form>
 
+    <form id="nearControl" action="">
+        <div>
+            <label>
+                Near control:
+                <input id="nearActivation" type="button" value="Activate" />
+            </label><br />
+            <label>
+                Layer:
+                <select id="nearLayerSelection">
+                    <option value="default">Points</option>
+                    <option value="segments">Lines</option>
+                </select>
+            </label><br />
+            <label>
+                Minimum distance:
+                <input id="minDistance" type="text" value="1000" />
+            </label><br />
+            <label>
+                Maximum distance:
+                <input id="maxDistance" type="text" value="20000" />
+            </label><br />
+        </div>
+    </form>
     <script>
     </script>
 </body>

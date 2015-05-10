@@ -66,16 +66,21 @@ namespace MapApplication.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> WithinBox(string id, [System.Web.Http.FromUri] double[] leftCorner, [System.Web.Http.FromUri] double[] rightCorner)
+        public async Task<JsonResult> WithinBox(string id, [System.Web.Http.FromUri] double[] bottomLeft, [System.Web.Http.FromUri]double[] topLeft, [System.Web.Http.FromUri] double[] topRight, [System.Web.Http.FromUri]double[] bottomRight)
         {
             IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(id);
 
             var withinQuery = new BsonDocument();
             withinQuery["$geoWithin"] = new BsonDocument();
-            var bsonLeftCorner = new BsonArray(leftCorner);
-            var bsonRightCorner = new BsonArray(rightCorner);
-            var bsonCorners = new BsonArray() { bsonLeftCorner, bsonRightCorner };
-            withinQuery["$geoWithin"]["$box"] = bsonCorners;
+            var bsonBottomLeft = new BsonArray(bottomLeft);
+            var bsonTopLeft = new BsonArray(topLeft);
+            var bsonTopRight = new BsonArray(topRight);
+            var bsonBottomRight = new BsonArray(bottomRight);
+            var bsonCorners = new BsonArray() { bsonBottomLeft, bsonTopLeft, bsonTopRight, bsonBottomRight, bsonBottomLeft };
+            var bsonPolygon = new BsonArray() { bsonCorners };
+            withinQuery["$geoWithin"]["$geometry"] = new BsonDocument();
+            withinQuery["$geoWithin"]["$geometry"]["type"] = "Polygon";
+            withinQuery["$geoWithin"]["$geometry"]["coordinates"] = bsonPolygon;
 
             var query = new BsonDocument("geometry", withinQuery);
 

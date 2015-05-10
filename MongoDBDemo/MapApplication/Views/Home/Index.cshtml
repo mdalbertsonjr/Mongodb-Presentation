@@ -57,9 +57,12 @@
             }
         }
 
-        function withinBox(layerId, leftCorner, rightCorner) {
+        function withinBox(layerId, bottomLeftCorner, topLeftCorner, topRightCorner, bottomRightCorner) {
             $.ajax({
-                url: '/home/WithinBox/' + layerId + '?leftCorner=' + leftCorner[0] + '&leftCorner=' + leftCorner[1] + '&rightCorner=' + rightCorner[0] + '&rightCorner=' + rightCorner[1],
+                url: '/home/WithinBox/' + layerId + '?bottomLeft=' + bottomLeftCorner[0] + '&bottomLeft=' + bottomLeftCorner[1]
+                    + '&topLeft=' + topLeftCorner[0] + '&topLeft=' + topLeftCorner[1]
+                    + '&topRight=' + topRightCorner[0] + '&topRight=' + topRightCorner[1]
+                    + '&bottomRight=' + bottomRightCorner[0] + '&bottomRight=' + bottomRightCorner[1],
                 success: function (data) {
                     var parsedData = JSON.parse(data);
                     var features = extractFeatures(parsedData);
@@ -139,13 +142,17 @@
                 vector_layer.removeAllFeatures();
 
                 var bottomLeft = map.getLonLatFromPixel({ x: e.left, y: e.bottom });
+                var topLeft = map.getLonLatFromPixel({ x: e.left, y: e.top });
                 var topRight = map.getLonLatFromPixel({ x: e.right, y: e.top });
-                var leftCorner = proj4(map.projection.projCode, proj4.WGS84, [bottomLeft.lon, bottomLeft.lat]);
-                var rightCorner = proj4(map.projection.projCode, proj4.WGS84, [topRight.lon, topRight.lat]);
+                var bottomRight = map.getLonLatFromPixel({ x: e.right, y: e.bottom });
+                var bottomLeftCorner = proj4(map.projection.projCode, proj4.WGS84, [bottomLeft.lon, bottomLeft.lat]);
+                var topLeftCorner = proj4(map.projection.projCode, proj4.WGS84, [topLeft.lon, topLeft.lat]);
+                var topRightCorner = proj4(map.projection.projCode, proj4.WGS84, [topRight.lon, topRight.lat]);
+                var bottomRightCorner = proj4(map.projection.projCode, proj4.WGS84, [bottomRight.lon, bottomRight.lat]);
 
                 var layerId = $('#withinBoxLayerSelection').val();
 
-                withinBox(layerId, leftCorner, rightCorner);
+                withinBox(layerId, bottomLeftCorner, topLeftCorner, topRightCorner, bottomRightCorner);
             }
         });
 

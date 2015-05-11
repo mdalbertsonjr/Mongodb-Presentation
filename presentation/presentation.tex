@@ -1,18 +1,16 @@
 \documentclass{beamer}
 
-%Use package graphics
-%Use package listings
 \usepackage{graphicx}
 \usepackage{listings}
 
 \title{MongoDB Basics}
 \author{Michael Albertson}
-\date{2015-05-12}%date of the talk
+\date{2015-05-12}
 
 \begin{document}
 
 
-\begin{frame}% Title frame
+\begin{frame}
 
 \maketitle
 
@@ -51,11 +49,10 @@
 
 \begin{itemize}
 \item XY Maps search engine
-\item Took a day
+\item DUI cam server
 \end{itemize}
 
-% XY Maps logo
-% MongoDB book logo
+\includegraphics{xy-logo.png}
 
 \end{frame}
 
@@ -65,6 +62,7 @@
 \begin{itemize}
 \item Ease of use
 \item JavaScript on the backend
+\item Systems that may not need ACID
 \end{itemize}
 
 \end{frame}
@@ -73,7 +71,7 @@
 \begin{frame}{The reasons not to use it}
 
 \begin{itemize}
-\item No one's been fired for it
+%\item No one's been fired for it
 \item Aggregation is slow
 \item XSS on the backend
 \item There are still databases that should be relational
@@ -83,7 +81,7 @@
 \end{frame}
 
 
-\begin{frame}% Demonstration: setting it up on windows.
+\begin{frame}{Demonstration: setting up on Windows} % Demonstration: setting it up on windows.
 
 \begin{center}
    Installation Demo
@@ -101,16 +99,25 @@
 \end{frame}
 
 
+\begin{frame}{Geospatial Indexing}
+
+\begin{itemize}
+\item Spherical or planar coordinates
+\item All spherical coordinates must be WGS 84
+\item Uses geohashing
+\item Only allows 2 dimensions
+\item 2dsphere requires GeoJSON
+\end{itemize}
+
+\end{frame}
+
+
 \begin{frame}% Demonstration: setup a C# project
 
 \begin{center}
    Demo
 \end{center}
 
-\end{frame}
-
-
-\begin{frame}{Geospatial Indexing}
 \end{frame}
 
 
@@ -123,11 +130,19 @@
 \end{frame}
 
 
-%\begin{frame}% Management tools?
-%\end{frame}
+\begin{frame}{Suggested reading}
 
-%\begin{frame}% Demonstration: docker cluster with driver and monitoring...
-%\end{frame}
+\begin{itemize}
+\item MongoDB: the Definitive Guide
+\item No ever got fired for using Hadoop in a cluster \url{http://research.microsoft.com/jump/163083}
+\item Towards robust distributed systems \url{https://www.cs.berkeley.edu/~brewer/cs262b-2004/PODC-keynote.pdf}
+\end{itemize}
+
+\begin{center}
+\includegraphics[scale=0.75]{mongo-cover.jpg}
+\end{center}
+
+\end{frame}
 
 
 \begin{frame} % Conclusion
@@ -135,6 +150,15 @@
 \begin{center}
    Any questions?
 \end{center}
+
+This talk should be available on GitHub.
+
+If you want to contact me:
+\begin{itemize}
+\item Email: mdalbertsonjr@gmail.com
+\item Twitter: @mdalbertsonjr
+\item Radio: KJ6RAS
+\end{itemize}
 
 \end{frame}
 

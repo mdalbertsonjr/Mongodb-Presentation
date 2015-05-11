@@ -45,8 +45,6 @@
         "./scripts/vm-guest-tools.bat",
         "./scripts/vagrant-ssh.bat",
         "./scripts/enable-rdp.bat",
-        "./scripts/chocolatey.bat",
-        "./scripts/chocopacks.bat",
         "./scripts/compile-dotnet-assemblies.bat"
       ]
     },

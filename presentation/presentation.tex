@@ -20,10 +20,10 @@
 \begin{frame}{What is No-SQL?}
 
 \begin{itemize}
-\item Non-relational
 \item Denormalized
 \item Distributed with high scalability
 \item BASE instead of ACID % http://www.eecs.berkeley.edu/~brewer/cs262b-2004/PODC-keynote.pdf
+\item CAP Theorem
 \item Not just SQL
 \end{itemize}
 
@@ -36,7 +36,7 @@
 \item Named for Humongous
 \item High scalability
 \item Fast writes
-\item Schemaless
+\item BSON
 \item Geospatial indexing
 \item Aggregation (map and reduce)
 \end{itemize}
@@ -52,7 +52,9 @@
 \item DUI cam server
 \end{itemize}
 
-\includegraphics{xy-logo.png}
+\begin{center}
+\includegraphics[scale=.5]{xy-logo.png}
+\end{center}
 
 \end{frame}
 
@@ -71,17 +73,15 @@
 \begin{frame}{The reasons not to use it}
 
 \begin{itemize}
-%\item No one's been fired for it
 \item Aggregation is slow
 \item XSS on the backend
 \item There are still databases that should be relational
-\item XY Maps maybe shouldn't have
 \end{itemize}
 
 \end{frame}
 
 
-\begin{frame}{Demonstration: setting up on Windows} % Demonstration: setting it up on windows.
+\begin{frame}
 
 \begin{center}
    Installation Demo
@@ -90,7 +90,7 @@
 \end{frame}
 
 
-\begin{frame}% Demonstration: using the mongo shell
+\begin{frame}
 
 \begin{center}
    Shell Demo
@@ -112,16 +112,7 @@
 \end{frame}
 
 
-\begin{frame}% Demonstration: setup a C# project
-
-\begin{center}
-   Demo
-\end{center}
-
-\end{frame}
-
-
-\begin{frame}% Demonstration: geospatial application
+\begin{frame}
 
 \begin{center}
    Demo

@@ -44,6 +44,22 @@ namespace MapApplication.Controllers
         {
             IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(id);
 
+            #region jsonExample
+            //Json example of the query.
+            //{
+            //    geometry: {
+            //        $near: {
+            //            $geometry: {
+            //                type: "Point",
+            //                coordinates: point,
+            //            },
+            //            $maxDistance: maxDistance,
+            //            $minDistance: minDistance
+            //        }
+            //    }
+            //}
+            #endregion
+
             var nearQuery = new BsonDocument();
             nearQuery["$near"] = new BsonDocument();
             nearQuery["$near"]["$geometry"] = (new
@@ -66,6 +82,22 @@ namespace MapApplication.Controllers
         public async Task<JsonResult> WithinBox(string id, [System.Web.Http.FromUri] double[] bottomLeft, [System.Web.Http.FromUri]double[] topLeft, [System.Web.Http.FromUri] double[] topRight, [System.Web.Http.FromUri]double[] bottomRight)
         {
             IMongoCollection<BsonDocument> collection = _db.GetCollection<BsonDocument>(id);
+
+            #region jsonExample
+            //The query as JSON
+            //{
+            //    geometry: {
+            //        $geoWithin: {
+            //            $geometry: {
+            //                type: "Polygon",
+            //                coordinates: [[
+            //                    bottomLeft, topLeft, topRight, bottomRight, bottomLeft
+            //                ]]
+            //            }
+            //        }
+            //    }
+            //}
+            #endregion
 
             var withinQuery = new BsonDocument();
             withinQuery["$geoWithin"] = new BsonDocument();

@@ -12,12 +12,6 @@
         var geoJSONParser = new OpenLayers.Format.GeoJSON();
 
         var nearControl, withinBoxControl;
-        //TODO list:
-        //Add a control for within box
-        //Don't use this:
-        //function y2lat(a) { return 180 / Math.PI * (2 * Math.atan(Math.exp(a * Math.PI / 180)) - Math.PI / 2); }
-        //Do this:
-        //proj4(map.projection.projCode, proj4.WGS84, [map.center.lon, map.center.lat])
 
         function extractFeatures(parsedData) {
             var features = [];
@@ -40,7 +34,6 @@
                     var features = extractFeatures(parsedData);
 
                     localLayer.addFeatures(features);
-                    map.zoomToExtent(localLayer.getExtent());
                 }
             });
         }
